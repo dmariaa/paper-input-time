@@ -1,0 +1,118 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../iron-validatable-behavior/iron-validatable-behavior.html">
+<link rel="import" href="../iron-validator-behavior/iron-validator-behavior.html">
+
+<dom-module id="paper-input-time-input">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+
+      iron-input > input {
+        @apply --paper-input-container-shared-input-style;
+        font-family: inherit;
+        font-weight: inherit;
+        font-size: inherit;
+        letter-spacing: inherit;
+        word-spacing: inherit;
+        line-height: inherit;
+        text-shadow: inherit;
+        color: inherit;
+        cursor: inherit;
+      }
+
+      iron-input > input,
+      iron-input > span {
+        font-size: 16px;
+        text-align: center;
+        vertical-align: bottom;
+      }
+    </style>
+    <time-validator></time-validator>
+    <div class="container">
+      <iron-input bind-value="{{_hour}}" aria-label="Hora" allowed-pattern="[0-9]">
+        <input maxlength="2" size="2" required$="[[required]]">
+      </iron-input>:<iron-input bind-value="{{_minute}}" aria-label="Minuto" allowed-pattern="[0-9]">
+        <input maxlength="2" size="2">
+      </iron-input>:<iron-input bind-value="{{_second}}" aria-label="Segundo" allowed-pattern="[0-9]">
+        <input maxlength="2" size="2">
+      </iron-input>
+    </div>
+  </template>
+  <script>
+    (function() {
+      class TimeValidator extends Polymer.mixinBehaviors([Polymer.IronValidatorBehavior], Polymer.Element) {
+        static get is() { return "time-validator" }
+
+        validate(time) {
+          if(!time) return true;
+
+          var dateParts=time.split(':');
+
+          if(parseInt(dateParts[0]) < 0 || parseInt(dateParts[0]) > 23) {
+            return false;
+          }
+          if(parseInt(dateParts[1]) < 0 || parseInt(dateParts[1]) > 59) {
+            return false;
+          }
+          if(parseInt(dateParts[2]) < 0 || parseInt(dateParts[2]) > 59) {
+            return false;
+          }
+
+          return true;
+        }
+      }
+
+      class PaperInputTimeInput extends Polymer.mixinBehaviors([ Polymer.IronValidatableBehavior ], Polymer.Element) {
+        static get is() {
+          return 'paper-input-time-input';
+        }
+
+        static get properties() {
+          return {
+            _hour: {
+              type: String,
+              value: ""
+            },
+            _minute: {
+              type: String,
+              value: ""
+            },
+            _second: {
+              type: String,
+              value: ""
+            },
+            value: {
+              type: String,
+              value: "",
+              notify: true
+            },
+            validator: {
+              type: String,
+              value: 'time-validator'
+            }
+          };
+        }
+
+        static get observers() {
+          return [
+            '_computeValue(_hour,_minute,_second)'
+          ];
+        }
+
+        _computeValue(_hour, _minute, _second) {
+          if (this._hour == "" && this._minute == "" & this._second == "") {
+            this.value = "";
+          } else {
+            this.value = _hour.trim() + ':' + _minute.trim() + ':' + _second.trim();
+          }
+        }
+      }
+
+      window.customElements.define(TimeValidator.is, TimeValidator);
+      window.customElements.define(PaperInputTimeInput.is, PaperInputTimeInput);
+    })();
+  </script>
+</dom-module>

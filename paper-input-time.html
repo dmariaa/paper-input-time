@@ -1,0 +1,70 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-input/paper-input-container.html">
+<link rel="import" href="../paper-input/paper-input-behavior.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+
+<link rel="import" href="../paper-input/paper-input-error.html">
+
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-iconset-svg/iron-iconset-svg.html">
+
+<link rel="import" href="paper-input-icon.html">
+<link rel="import" href="paper-input-time-input.html">
+
+<dom-module id="paper-input-time">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        outline: none;
+      }
+    </style>
+    <paper-input-container always-float-label
+                           disabled$="[[disabled]]"
+                           invalid="[[invalid]]"
+                           auto-validate="[[autoValidate]]">
+      <label slot="label">Hora</label>
+
+      <paper-input-time-input
+          id="input"
+          slot="input"
+          class="paper-input-input"
+          invalid="{{invalid}}"
+          required="[[required]]"
+          value="{{value}}"></paper-input-time-input>
+
+      <div slot="suffix">
+        <iron-icon icon="paper-input-time:arrow-drop-down"></iron-icon>
+      </div>
+
+      <template is="dom-if" if="[[errorMessage]]">
+        <paper-input-error aria-live="assertive" slot="add-on">[[errorMessage]]</paper-input-error>
+      </template>
+
+    </paper-input-container>
+  </template>
+
+  <script>
+    (function() {
+      /**
+       * `paper-input-time`
+       *
+       *
+       * @customElement
+       * @polymer
+       * @demo demo/index.html
+       */
+      class PaperInputTime extends Polymer.mixinBehaviors([ Polymer.PaperInputBehavior,
+          Polymer.IronFormElementBehavior ], Polymer.Element) {
+        static get is() { return 'paper-input-time'; }
+        static get properties() {
+          return {};
+        }
+      }
+
+
+      window.customElements.define(PaperInputTime.is, PaperInputTime);
+    })();
+
+  </script>
+</dom-module>
