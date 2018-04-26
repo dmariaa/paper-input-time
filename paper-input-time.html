@@ -23,7 +23,8 @@
                            disabled$="[[disabled]]"
                            invalid="[[invalid]]"
                            auto-validate="[[autoValidate]]">
-      <label slot="label">Hora</label>
+
+      <label hidden$="[[!label]]" aria-hidden="true" for$="[[_inputId]]" slot="label">[[label]]</label>
 
       <paper-input-time-input
           id="input"
@@ -57,6 +58,7 @@
       class PaperInputTime extends Polymer.mixinBehaviors([ Polymer.PaperInputBehavior,
           Polymer.IronFormElementBehavior ], Polymer.Element) {
         static get is() { return 'paper-input-time'; }
+
         static get properties() {
           return {};
         }
