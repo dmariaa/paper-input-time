@@ -72,22 +72,21 @@
 
         static get properties() {
           return {
+            value: {
+              type: String,
+              notify: true
+            },
             _hour: {
               type: String,
-              value: ""
+              value: ''
             },
             _minute: {
               type: String,
-              value: ""
+              value: ''
             },
             _second: {
               type: String,
-              value: ""
-            },
-            value: {
-              type: String,
-              value: "",
-              notify: true
+              value: ''
             },
             validator: {
               type: String,
@@ -107,6 +106,11 @@
           return this.$.hour.inputElement;
         }
 
+        attached() {
+          super.attached();
+          this._isAttached = true;
+        }
+
         _setValue(value) {
           if(value) {
             var v = value.split(':');
@@ -119,11 +123,8 @@
         }
 
         _computeValue(_hour, _minute, _second) {
-          if (this._hour == "" && this._minute == "" & this._second == "") {
-            this.value = "";
-          } else {
-            this.value = _hour.trim() + ':' + _minute.trim() + ':' + _second.trim();
-          }
+          if(!this._isAttached) return;
+          this.value = _hour.trim() + ':' + _minute.trim() + ':' + _second.trim();
         }
       }
 
