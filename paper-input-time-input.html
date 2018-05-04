@@ -32,7 +32,7 @@
     </style>
     <time-validator></time-validator>
     <div class="container">
-      <iron-input bind-value="{{_hour}}" aria-label="Hora" allowed-pattern="[0-9]">
+      <iron-input id="hour" bind-value="{{_hour}}" aria-label="Hora" allowed-pattern="[0-9]">
         <input maxlength="2" size="2" required$="[[required]]">
       </iron-input>:<iron-input bind-value="{{_minute}}" aria-label="Minuto" allowed-pattern="[0-9]">
         <input maxlength="2" size="2">
@@ -98,8 +98,24 @@
 
         static get observers() {
           return [
-            '_computeValue(_hour,_minute,_second)'
+            '_computeValue(_hour,_minute,_second)',
+            '_setValue(value)'
           ];
+        }
+
+        get _focusableElement() {
+          return this.$.hour.inputElement;
+        }
+
+        _setValue(value) {
+          if(value) {
+            var v = value.split(':');
+            if(v.length>2) {
+              this._hour = v[0];
+              this._minute = v[1];
+              this._second = v[2];
+            }
+          }
         }
 
         _computeValue(_hour, _minute, _second) {

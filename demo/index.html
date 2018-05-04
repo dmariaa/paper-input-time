@@ -18,25 +18,29 @@
     </custom-style>
   </head>
   <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic paper-input-time demo</h3>
-      <demo-snippet>
-        <template>
-          <paper-input-time></paper-input-time>
-        </template>
-        <script>
-          var dt = document.querySelector('paper-input-time');
-        </script>
-      </demo-snippet>
-      <h3>Basic paper-input-time demo</h3>
-      <demo-snippet>
-        <template>
-          <paper-input-time label="Hora inicial" error-message="Hora invalida" required auto-validate></paper-input-time>
-        </template>
-        <script>
-          var dt = document.querySelector('paper-input-time');
-        </script>
-      </demo-snippet>
-    </div>
+    <dom-bind id="app">
+      <template>
+        <div class="vertical-section-container centered">
+          <h3>Basic paper-input-time demo</h3>
+          <demo-snippet>
+              <paper-input-time id="single"></paper-input-time>
+          </demo-snippet>
+          <h3>Basic paper-input-time demo</h3>
+          <demo-snippet>
+              <paper-input-time id="validated" label="Hora inicial" error-message="Hora invalida" required auto-validate></paper-input-time>
+          </demo-snippet>
+          <h3>Basic paper-input-time demo</h3>
+          <demo-snippet>
+            <paper-input-time id="value" value="{{time_value}}" label="Hora inicial" error-message="Hora invalida" required auto-validate></paper-input-time>
+          </demo-snippet>
+        </div>
+      </template>
+    </dom-bind>
+    <script>
+      document.addEventListener('WebComponentsReady', function() {
+        var app=document.getElementById('app');
+        app.$.value.value="35:01:12";
+      });
+    </script>
   </body>
 </html>
