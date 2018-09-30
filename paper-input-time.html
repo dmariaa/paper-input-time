@@ -32,6 +32,7 @@
           class="paper-input-input"
           invalid="{{invalid}}"
           required="[[required]]"
+          hide-seconds="[[hideSeconds]]"
           value="{{value}}"></paper-input-time-input>
 
       <div slot="suffix">
@@ -61,7 +62,12 @@
         static get is() { return 'paper-input-time'; }
 
         static get properties() {
-          return {};
+          return {
+            hideSeconds: {
+              type: Boolean,
+              value: false
+            }
+          };
         }
       }
 

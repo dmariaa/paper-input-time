@@ -29,15 +29,20 @@
         text-align: center;
         vertical-align: bottom;
       }
+
+      iron-input[hidden],
+      span[hidden] {
+        display:none!important;
+      }
     </style>
     <time-validator></time-validator>
     <div class="container">
       <iron-input id="hour" bind-value="{{_hour}}" aria-label="Hora" allowed-pattern="[0-9]">
-        <input maxlength="2" size="2" required$="[[required]]">
+        <input maxlength="2" size="2" required$="[[required]]" placeholder="00">
       </iron-input>:<iron-input bind-value="{{_minute}}" aria-label="Minuto" allowed-pattern="[0-9]">
-        <input maxlength="2" size="2">
-      </iron-input>:<iron-input bind-value="{{_second}}" aria-label="Segundo" allowed-pattern="[0-9]">
-        <input maxlength="2" size="2">
+        <input maxlength="2" size="2" placeholder="00">
+      </iron-input><span hidden="[[hideSeconds]]">:</span><iron-input bind-value="{{_second}}" aria-label="Segundo" allowed-pattern="[0-9]" hidden="[[hideSeconds]]">
+        <input maxlength="2" size="2" placeholder="00">
       </iron-input>
     </div>
   </template>
@@ -91,6 +96,10 @@
             validator: {
               type: String,
               value: 'time-validator'
+            },
+            hideSeconds: {
+              type: Boolean,
+              value: false
             }
           };
         }
@@ -124,7 +133,7 @@
 
         _computeValue(_hour, _minute, _second) {
           if(!this._isAttached) return;
-          this.value = _hour.trim() + ':' + _minute.trim() + ':' + _second.trim();
+          this.value = _hour.trim() + ':' + _minute.trim() + ':' + (_second.trim() || "00");
         }
       }
 
