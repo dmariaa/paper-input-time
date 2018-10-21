@@ -39,9 +39,9 @@
     <div class="container">
       <iron-input id="hour" bind-value="{{_hour}}" aria-label="Hora" allowed-pattern="[0-9]">
         <input maxlength="2" size="2" required$="[[required]]" placeholder="00">
-      </iron-input>:<iron-input bind-value="{{_minute}}" aria-label="Minuto" allowed-pattern="[0-9]">
+      </iron-input>:<iron-input bind-value="{{_minute}}" aria-label="Minuto" allowed-pattern="[0-9]" on-change="_inputToValue">
         <input maxlength="2" size="2" placeholder="00">
-      </iron-input><span hidden="[[hideSeconds]]">:</span><iron-input bind-value="{{_second}}" aria-label="Segundo" allowed-pattern="[0-9]" hidden="[[hideSeconds]]">
+      </iron-input><span hidden="[[hideSeconds]]">:</span><iron-input bind-value="{{_second}}" aria-label="Segundo" allowed-pattern="[0-9]" hidden="[[hideSeconds]]" on-change="_inputToValue">
         <input maxlength="2" size="2" placeholder="00">
       </iron-input>
     </div>
@@ -106,7 +106,6 @@
 
         static get observers() {
           return [
-            '_computeValue(_hour,_minute,_second)',
             '_setValue(value)'
           ];
         }
@@ -128,12 +127,27 @@
               this._minute = v[1];
               this._second = v[2];
             }
+          } else {
+            this._hour = '';
+            this._minute = '';
+            this._second = '';
           }
         }
 
-        _computeValue(_hour, _minute, _second) {
+        _inputToValue(_hour, _minute, _second) {
           if(!this._isAttached) return;
-          this.value = _hour.trim() + ':' + _minute.trim() + ':' + (_second.trim() || "00");
+          if(!this._complete()) return;
+
+          var hour = this._hour.trim();
+          var minute = this._minute.trim();
+          var second = this._second.trim() || '00';
+          var val = hour.trim() + ':' + minute.trim() + ':' + second;
+          this.value = val;
+        }
+
+        _complete() {
+          if(!this._hour.trim() || !this._minute.trim() || (!this._second.trim() && !this.hideSeconds)) return false;
+          return true;
         }
       }
 

@@ -2,8 +2,13 @@
 <link rel="import" href="../paper-input/paper-input-container.html">
 <link rel="import" href="../paper-input/paper-input-behavior.html">
 <link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="../paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
 
 <link rel="import" href="../paper-input/paper-input-error.html">
+<link rel="import" href="../paper-time-picker/paper-time-picker.html">
+<link rel="import" href="../neon-animation/web-animations.html">
 
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-iconset-svg/iron-iconset-svg.html">
@@ -11,12 +16,61 @@
 <link rel="import" href="paper-input-icon.html">
 <link rel="import" href="paper-input-time-input.html">
 
+<script src="../moment/moment.js"></script>
+
 <dom-module id="paper-input-time">
   <template>
     <style>
       :host {
         display: inline-block;
         outline: none;
+
+        --paper-time-picker: {
+          width: 380px;
+          height: 280px;
+        };
+
+        --paper-time-picker-heading: {
+          width: 136px;
+          background: #009688;
+        };
+
+        --paper-font-display2: {
+          font-size: 40px;
+        };
+
+        --default-primary-color: #009688;
+
+        --paper-menu-button: {
+          padding: 0px;
+        };
+      }
+
+      .paper-time-picker-dialog {
+        position: relative;
+      }
+
+      .buttons {
+        height: 19px;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -ms-flex-direction: row;
+        -webkit-flex-direction: row;
+        flex-direction: row;
+        -ms-flex-pack: end;
+        -webkit-justify-content: flex-end;
+        justify-content: flex-end;
+        color: #009688;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 8px 8px 8px 24px;
+        margin: 0;
+        font-size: 12px;
+        font-weight: 500;
+        --paper-button-ink-color: #737373;
       }
     </style>
     <paper-input-container always-float-label
@@ -35,9 +89,16 @@
           hide-seconds="[[hideSeconds]]"
           value="{{value}}"></paper-input-time-input>
 
-      <div slot="suffix">
-        <iron-icon icon="paper-input-time:arrow-drop-down"></iron-icon>
-      </div>
+      <paper-menu-button id="time_picker_menu" allow-outside-scroll dynamic-align ignore-select="true" slot="suffix">
+        <iron-icon slot="dropdown-trigger" icon="paper-input-time:arrow-drop-down"></iron-icon>
+        <div slot="dropdown-content" class="paper-time-picker-dialog">
+          <paper-time-picker id="timepicker"></paper-time-picker>
+          <div class="buttons" on-tap="_buttonClicked">
+            <paper-button class="dismiss-button">SALIR</paper-button>
+            <paper-button class="confirm-button">ACEPTAR</paper-button>
+          </div>
+        </div>
+      </paper-menu-button>
 
       <template is="dom-if" if="[[errorMessage]]">
         <paper-input-error aria-live="assertive" slot="add-on">[[errorMessage]]</paper-input-error>
@@ -68,6 +129,20 @@
               value: false
             }
           };
+        }
+
+        _buttonClicked(event) {
+          if(event.target.tagName != 'PAPER-BUTTON') return;
+          if(event.target.classList.contains('dismiss-button')) {
+            // Nothing to do
+          } else if(event.target.classList.contains('confirm-button')) {
+            var m = moment();
+            m.hours(this.$.timepicker.hour);
+            m.minutes(this.$.timepicker.minute);
+            m.seconds(this.$.timepicker.second);
+            this.set('value', m.format("HH[:]mm[:]ss"));
+          }
+          this.$.time_picker_menu.close();
         }
       }
 
